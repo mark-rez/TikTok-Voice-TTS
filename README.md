@@ -46,7 +46,7 @@ List of every voice and its designation: [voices](https://github.com/oscie57/tik
 
 ## Samples
 
-You can find samples of all voices in [/samples/](https://github.com/oscie57/tiktok-voice/blob/main/samples/)
+You can find samples of all voices in [/samples/](https://github.com/GiorDior/TikTok-Voice-TTS/tree/main/samples)
 
 ## Credits
 - [oscie](https://github.com/oscie57/tiktok-voice) for giving me the idea for this project
