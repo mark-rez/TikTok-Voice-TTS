@@ -50,3 +50,4 @@ You can find samples of all voices in [/samples/](https://github.com/GiorDior/Ti
 
 ## Credits
 - [oscie](https://github.com/oscie57/tiktok-voice) for giving me the idea for this project
+- [Weilbyte](https://github.com/Weilbyte/tiktok-tts) for providing the service to genreate tiktok audios 
