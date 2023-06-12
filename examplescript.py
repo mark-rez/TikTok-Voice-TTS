@@ -1,8 +1,3 @@
-# author: GiorDior aka Giorgio
-# date: 12.06.20023
-# topic: TikTok-Voice-TTS
-# version: 1.0
-
 from tiktokvoice import *
 
 text = "I am a hero!"
