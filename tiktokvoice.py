@@ -1,3 +1,9 @@
+# author: GiorDior aka Giorgio
+# date: 12.06.20023
+# topic: TikTok-Voice-TTS
+# version: 1.0
+# credits: https://github.com/oscie57/tiktok-voice
+
 import threading, requests, base64
 from playsound import playsound
 
