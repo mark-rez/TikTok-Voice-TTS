@@ -64,7 +64,7 @@ VOICES = [
     'en_female_emotional',         # peaceful
 ]
 
-ENDPOINTS = ['https://tiktok-tts.weilnet.workers.dev/api/generate', "https://tiktoktts.com/api/tiktok-tts"]
+ENDPOINTS = ['https://tiktok-tts.weilnet.workers.dev/api/generation', "https://tiktoktts.com/api/tiktok-tts"]
 current_endpoint = 0
 # in one conversion, the text can have a maximum length of 300 characters
 TEXT_BYTE_LIMIT = 300
