@@ -64,8 +64,8 @@ VOICES = [
     'en_female_emotional',         # peaceful
 ]
 
-ENDPOINT = 'https://tiktok-tts.weilnet.workers.dev'
-
+ENDPOINTS = ['https://tiktok-tts.weilnet.workers.dev/api/generate', "https://tiktoktts.com/api/tiktok-tts"]
+current_endpoint = 1
 # in one conversion, the text can have a maximum length of 300 characters
 TEXT_BYTE_LIMIT = 300
 
@@ -87,7 +87,7 @@ def split_string(string: str, chunk_size: int) -> list[str]:
 
 # checking if the website that provides the service is available
 def get_api_response() -> requests.Response:
-    url = f'{ENDPOINT}/api/status'
+    url = f'{ENDPOINTS[current_endpoint].split("/a")[0]}'
     response = requests.get(url)
     return response
 
@@ -99,7 +99,7 @@ def save_audio_file(base64_data: str, filename: str = "output.mp3") -> None:
 
 # send POST request to get the audio data
 def generate_audio(text: str, voice: str) -> bytes:
-    url = f'{ENDPOINT}/api/generation'
+    url = f'{ENDPOINTS[current_endpoint]}'
     headers = {'Content-Type': 'application/json'}
     data = {'text': text, 'voice': voice}
     response = requests.post(url, headers=headers, json=data)
@@ -108,13 +108,17 @@ def generate_audio(text: str, voice: str) -> bytes:
 # creates an text to speech audio file
 def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound: bool = False) -> None:
     # checking if the website is available
-    api_response = get_api_response()
+    global current_endpoint
 
-    if api_response.status_code == 200:
+    if get_api_response().status_code == 200:
         print("Service available!")
     else:
-        print("Service not available and probably temporarily rate limited, try again later or check, if https://tiktok-tts.weilnet.workers.dev is available...")
-        return
+        current_endpoint = (current_endpoint + 1) % 2
+        if get_api_response().status_code == 200:
+            print("Service available!")
+        else:
+            print(f"Service not available and probably temporarily rate limited, try again later...")
+            return
     
     # checking if arguments are valid
     if voice == "none":
@@ -134,7 +138,10 @@ def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound
         if len(text) < TEXT_BYTE_LIMIT:
             if len(text) < TEXT_BYTE_LIMIT:
                 audio = generate_audio((text), voice)
-                audio_base64_data = str(audio).split('"')[5]
+                if current_endpoint == 0:
+                    audio_base64_data = str(audio).split('"')[5]
+                else:
+                    audio_base64_data = str(audio).split('"')[3].split(",")[1]
                 
                 if audio_base64_data == "error":
                     print("This voice is unavailable right now")
@@ -148,7 +155,10 @@ def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound
             # Define a thread function to generate audio for each text part
             def generate_audio_thread(text_part, index):
                 audio = generate_audio(text_part, voice)
-                base64_data = str(audio).split('"')[5]
+                if current_endpoint == 0:
+                    base64_data = str(audio).split('"')[5]
+                else:
+                    base64_data = str(audio).split('"')[3].split(",")[1]
 
                 if audio_base64_data == "error":
                     print("This voice is unavailable right now")
@@ -166,8 +176,6 @@ def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound
             # Wait for all threads to complete
             for thread in threads:
                 thread.join()
-                if (thread.result) == "error":
-                    return
 
             # Concatenate the base64 data in the correct order
             audio_base64_data = "".join(audio_base64_data)
