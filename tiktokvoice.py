@@ -113,7 +113,7 @@ def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound
     if api_response.status_code == 200:
         print("Service available!")
     else:
-        print("Service not available, try again later or check, if https://tiktok-tts.weilnet.workers.dev is available...")
+        print("Service not available and probably temporarily rate limited, try again later or check, if https://tiktok-tts.weilnet.workers.dev is available...")
         return
     
     # checking if arguments are valid
