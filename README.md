@@ -12,7 +12,7 @@ To install the required packages, run:
 
 ### Create audio from file
 1. Make sure you have your text in plaintext. You can name it anything
-2. Run `py main.py -f FILENAME.txt -v VOICENAME` (see voices below)
+2. Run `py main.py -txt FILENAME.txt -v VOICENAME` (see voices below)
 
 Only latin characters are supported.
 
