@@ -8,7 +8,7 @@ I thank all people that use this for their project. I love to contribute to the 
 
 To use this, you need Python 3.6+ and all of the required packages installed.
 To install the required packages, run: 
-<br>`pip3 install playsound requests` or `pip3 install requirements.txt`
+<br>`pip3 install playsound requests` or `pip3 install -r requirements.txt`
 
 ### Create audio from file
 1. Make sure you have your text in plaintext. You can name it anything
