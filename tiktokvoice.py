@@ -136,16 +136,15 @@ def tts(text: str, voice: str = "none", filename: str = "output.mp3", play_sound
     # creating the audio file
     try:
         if len(text) < TEXT_BYTE_LIMIT:
-            if len(text) < TEXT_BYTE_LIMIT:
-                audio = generate_audio((text), voice)
-                if current_endpoint == 0:
-                    audio_base64_data = str(audio).split('"')[5]
-                else:
-                    audio_base64_data = str(audio).split('"')[3].split(",")[1]
-                
-                if audio_base64_data == "error":
-                    print("This voice is unavailable right now")
-                    return
+            audio = generate_audio((text), voice)
+            if current_endpoint == 0:
+                audio_base64_data = str(audio).split('"')[5]
+            else:
+                audio_base64_data = str(audio).split('"')[3].split(",")[1]
+            
+            if audio_base64_data == "error":
+                print("This voice is unavailable right now")
+                return
                 
         else:
             # Split longer text into smaller parts
