@@ -6,7 +6,7 @@ I thank all people that use this for their project. I love to contribute to the 
 
 ## Usage
 
-To use this, you need Python 3.6+ and all of the required packages installed.
+To use this program, you need an internet connection, python 3.6+ and all of the required packages installed.
 To install the required packages, run: 
 <br>`pip3 install playsound requests` or `pip3 install -r requirements.txt`
 
