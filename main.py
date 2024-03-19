@@ -1,7 +1,7 @@
-# author: GiorDior aka Giorgio
-# date: 12.06.2023
+# author: Giorgio
+# date: 19.03.2024
 # topic: TikTok-Voice-TTS
-# version: 1.0
+# version: 1.1
 
 import argparse
 
@@ -21,15 +21,15 @@ def main():
 
     # checking if given values are valid
     if not args.t and not args.txt:
-        print("Insert a valid text or txt file")
+        print("Error: insert a valid text or txt file")
         return
 
     if args.t and args.txt:
-        print("Only one input type is possible")
+        print("Error: only one input type is possible")
         return
     
     if not args.v:
-        print("No voice has been selected")
+        print("Error: no voice has been selected")
         return
 
     # executing script
