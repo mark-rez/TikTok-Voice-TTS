@@ -48,7 +48,7 @@ def tts(text: str, voice: str, output_filename: str = "output.mp3", play_sound: 
     for entry in ENDPOINT_DATA:
         # Split the text into chunks
         chunks: list[str] = split_string(text)
-        data: list[str] = ["" * len(chunks)]
+        data: list[str] = ["" for i in range(len(chunks))]
 
         # Define a function to generate audio for each chunk in a separate thread
         def generate_audio_chunk(index: int, chunk: str) -> None:
