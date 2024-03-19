@@ -22,7 +22,7 @@ Only latin characters are supported.
 You can have non-latin characters (as long as it has a TTS supported voice).
 
 ### Create audio in python script
-1. Put the file `tiktokvoice.py` into your directory.
+1. Put the file `tiktokvoice.py` and the folder `tts_json_data` into your directory.
 2. Import the text-to-speech function with `from tiktokvoice.py import tts`.
 3. Execute `tts(TEXT, VOICENAME, OUTPUTFILENAME, PLAYSOUND)` in your code. 
 
