@@ -1,4 +1,4 @@
-from tiktokvoice import *
+from tiktokvoice import tts
 
 text = "I am a hero!"
 voice = "en_us_006" # all possible voices can be found here
