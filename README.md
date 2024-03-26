@@ -7,8 +7,7 @@ I thank all people that use this for their project. I love to contribute to the 
 ## Usage
 
 To use this program, you need an internet connection, python 3.6+ and all of the required packages installed.
-To install the required packages, run: 
-<br>`pip3 install -r requirements.txt`
+To install the required packages, run: `pip3 install -r requirements.txt`
 
 ### Create audio from file
 1. Make sure you have your text in plaintext. You can name it anything
@@ -22,7 +21,7 @@ Only latin characters are supported.
 You can have non-latin characters (as long as it has a TTS supported voice).
 
 ### Create audio in python script
-1. Put the file `tiktokvoice.py` and the folder `tts_json_data` into your directory.
+1. Put the file `tiktokvoice.py` into your directory.
 2. Import the text-to-speech function with `from tiktokvoice import tts`.
 3. Execute `tts(TEXT, VOICENAME, OUTPUTFILENAME, PLAYSOUND)` in your code. 
 
