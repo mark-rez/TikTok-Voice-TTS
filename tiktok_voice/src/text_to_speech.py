@@ -4,7 +4,7 @@ import requests
 import base64
 import re
 from json import load
-from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Optional
 
 # Downloaded modules
@@ -26,7 +26,6 @@ def tts(
 
     # Load endpoint data from the endpoints.json file
     endpoint_data: List[Dict[str, str]] = _load_endpoints()
-    
 
     # Iterate over endpoints to find a working one
     for endpoint in endpoint_data:
@@ -40,7 +39,14 @@ def tts(
             # Optionally play the audio file
             if play_sound:
                 playsound(output_file_path)
-            
+                
+                # Delete the audio file after playing
+                if os.path.exists(output_file_path):
+                    os.remove(output_file_path)
+                    print(f"{output_file_path} has been deleted.")
+                else:
+                    print("The file does not exist.")
+                 
             # Stop after processing a valid endpoint
             break
 
@@ -72,13 +78,9 @@ def _fetch_audio_bytes(
         except (requests.RequestException, KeyError):
             return
 
-    # Start threads for generating audio for each chunk
-    threads = [Thread(target=generate_audio_chunk, args=(i, chunk)) for i, chunk in enumerate(text_chunks)]
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
+    # Use ThreadPoolExecutor for better thread management
+    with ThreadPoolExecutor() as executor:
+        executor.map(generate_audio_chunk, range(len(text_chunks)), text_chunks)
 
     if any(not chunk for chunk in audio_chunks):
         return None
@@ -108,23 +110,5 @@ def _split_text(text: str) -> List[str]:
     """Split text into chunks of 300 characters or less."""
     
     # Split text into chunks based on punctuation marks
-    merged_chunks: List[str] = []
     separated_chunks: List[str] = re.findall(r'.*?[.,!?:;-]|.+', text)
-
-    # Further split any chunks longer than 300 characters
-    for i, chunk in enumerate(separated_chunks):
-        if len(chunk) > 300:
-            separated_chunks[i:i+1] = re.findall(r'.*?[ ]|.+', chunk) 
-
-    # Combine chunks into segments of 300 characters or less
-    current_chunk: str = ""
-    for separated_chunk in separated_chunks:
-        if len(current_chunk) + len(separated_chunk) <= 300:
-            current_chunk += separated_chunk
-        else:
-            merged_chunks.append(current_chunk)
-            current_chunk = separated_chunk
-
-    # Append the last chunk
-    merged_chunks.append(current_chunk)
-    return merged_chunks
+    return separated_chunks
