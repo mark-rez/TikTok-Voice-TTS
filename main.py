@@ -3,9 +3,7 @@
 # topic: TikTok-Voice-TTS
 # version: 1.3
 
-from codecs import BOM_UTF32
 import argparse
-# the script in the directory
 from tiktok_voice import tts, Voice
 
 def main():
@@ -20,21 +18,19 @@ def main():
     args = parser.parse_args()
 
     # checking if given values are valid
-    if not args.t and not args.txt:
+    if not (args.t or args.txt):
         raise ValueError("insert a valid text or txt file")
 
     if args.t and args.txt:
         raise ValueError("only one input type is possible")
     
-    voice: Voice | None = Voice.from_string(args.v)
-    if voice == None:
+    voice = Voice.from_string(args.v)
+    if voice is None:
         raise ValueError("no valid voice has been selected")
 
     # executing script
-    if args.t:
-        tts(args.t, voice, args.o, args.play)
-    elif args.txt:
-        tts(args.txt.read(), voice, args.o, args.play)
+    text = args.t if args.t else args.txt.read()
+    tts(text, voice, args.o, args.play)
 
 if __name__ == "__main__":
     main()
