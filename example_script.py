@@ -7,4 +7,4 @@ text = 'Tangerines are smaller and less rounded than the oranges. The taste is c
 #   - voice which is used for the audio
 #   - output file name
 #   - play sound after generating the audio
-tts(text, Voice.EN_US_MALE_1, "output.mp3", play_sound=True)
+tts(text, Voice.US_MALE_1, "output.mp3", play_sound=True)
