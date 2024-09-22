@@ -110,16 +110,16 @@ def _split_text(text: str) -> List[str]:
     # Split text into chunks based on punctuation marks
     merged_chunks: List[str] = []
     separated_chunks: List[str] = re.findall(r'.*?[.,!?:;-]|.+', text)
-
+    character_limit: int = 300
     # Further split any chunks longer than 300 characters
     for i, chunk in enumerate(separated_chunks):
-        if len(chunk) > 300:
+        if len(chunk.encode("utf-8")) > character_limit:
             separated_chunks[i:i+1] = re.findall(r'.*?[ ]|.+', chunk) 
 
     # Combine chunks into segments of 300 characters or less
     current_chunk: str = ""
     for separated_chunk in separated_chunks:
-        if len(current_chunk) + len(separated_chunk) <= 300:
+        if len(current_chunk.encode("utf-8")) + len(separated_chunk.encode("utf-8")) <= character_limit:
             current_chunk += separated_chunk
         else:
             merged_chunks.append(current_chunk)
