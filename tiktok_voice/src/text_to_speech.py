@@ -26,7 +26,7 @@ def tts(
 
     # Load endpoint data from the endpoints.json file
     endpoint_data: List[Dict[str, str]] = _load_endpoints()
-    
+    success: bool = False    
 
     # Iterate over endpoints to find a working one
     for endpoint in endpoint_data:
@@ -41,8 +41,12 @@ def tts(
             if play_sound:
                 playsound(output_file_path)
             
+            success = True
             # Stop after processing a valid endpoint
             break
+
+    if not success:
+        raise Exception("failed to generate audio")
 
 def _save_audio_file(output_file_path: str, audio_bytes: bytes):
     """Write the audio bytes to a file."""
