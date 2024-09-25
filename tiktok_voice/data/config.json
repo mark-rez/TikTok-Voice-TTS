@@ -4,10 +4,6 @@
         "response": "data"
     },
     {
-        "url": "https://countik.com/api/text/speech",
-        "response": "v_data"
-    },
-    {
         "url": "https://gesserit.co/api/tiktok-tts",
         "response": "base64"
     }
