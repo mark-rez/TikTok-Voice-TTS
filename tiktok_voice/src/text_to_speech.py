@@ -13,6 +13,10 @@ from playsound import playsound
 # Local files
 from .voice import Voice
 
+import logging
+# Setup logging configuration
+logging.basicConfig(level=logging.INFO)
+
 def tts(
     text: str,
     voice: Voice,
@@ -108,27 +112,61 @@ def _validate_args(text: str, voice: Voice):
     if not text:
         raise ValueError("text must not be empty")
 
-def _split_text(text: str) -> List[str]:
-    """Split text into chunks of 300 characters or less."""
+def _split_text(text: str, byte_limit: int = 300) -> List[str]:
+    """
+    Split text into chunks where each chunk's UTF-8 byte length is <= byte_limit.
     
-    # Split text into chunks based on punctuation marks
-    merged_chunks: List[str] = []
-    separated_chunks: List[str] = re.findall(r'.*?[.,!?:;-]|.+', text)
-    character_limit: int = 300
-    # Further split any chunks longer than 300 characters
-    for i, chunk in enumerate(separated_chunks):
-        if len(chunk.encode("utf-8")) > character_limit:
-            separated_chunks[i:i+1] = re.findall(r'.*?[ ]|.+', chunk) 
+    Args:
+        text (str): The input text to be split.
+        byte_limit (int): The maximum byte size per chunk.
+        
+    Returns:
+        List[str]: A list of text chunks.
+    """
+    merged_chunks = []
+    current_chunk = ""
+    current_byte_length = 0
+    
+    # Extended punctuation and symbols for chunk splitting
+    punctuation_regex = r'.*?[.,!?:;\-—…“”‘’\'"「」『』（）【】《》{}<>\[\]‥、。！？\n]|.+'
 
-    # Combine chunks into segments of 300 characters or less
-    current_chunk: str = ""
-    for separated_chunk in separated_chunks:
-        if len(current_chunk.encode("utf-8")) + len(separated_chunk.encode("utf-8")) <= character_limit:
-            current_chunk += separated_chunk
+    # Split text based on punctuation and symbols to maintain natural pauses
+    separated_chunks = re.findall(punctuation_regex, text)
+    
+    for chunk in separated_chunks:
+        chunk_byte_length = len(chunk.encode('utf-8'))
+        
+        if chunk_byte_length > byte_limit:
+            # Split the chunk further if it exceeds byte limit
+            words = chunk.split()
+            for word in words:
+                word_byte_length = len(word.encode('utf-8'))
+                if current_byte_length + word_byte_length + 1 > byte_limit:
+                    if current_chunk:
+                        merged_chunks.append(current_chunk)
+                        logging.info(f"Chunk created: {current_chunk} (Bytes: {current_byte_length})")
+                    current_chunk = word
+                    current_byte_length = word_byte_length
+                else:
+                    if current_chunk:
+                        current_chunk += ' ' + word
+                        current_byte_length += word_byte_length + 1  # +1 for space
+                    else:
+                        current_chunk = word
+                        current_byte_length = word_byte_length
         else:
-            merged_chunks.append(current_chunk)
-            current_chunk = separated_chunk
-
-    # Append the last chunk
-    merged_chunks.append(current_chunk)
+            if current_byte_length + chunk_byte_length > byte_limit:
+                if current_chunk:
+                    merged_chunks.append(current_chunk)
+                    logging.info(f"Chunk created: {current_chunk} (Bytes: {current_byte_length})")
+                current_chunk = chunk
+                current_byte_length = chunk_byte_length
+            else:
+                current_chunk += chunk
+                current_byte_length += chunk_byte_length
+    
+    if current_chunk:
+        merged_chunks.append(current_chunk)
+        logging.info(f"Chunk created: {current_chunk} (Bytes: {current_byte_length})")
+    
     return merged_chunks
